@@ -4,14 +4,16 @@
 # entries, so it activates after @deepseek-ai/dsh-permission-presets and can
 # pre-empt the initial permission pin for new sessions.
 #
-# The `workspaces` dict is the value edited by Settings > Workspace modes; keep
-# it empty here and assign presets in the GUI. `rules` stays for config-as-code
-# setups (longest path prefix wins, and a workspace entry beats a rule for the
-# same directory).
+# The `workspaces` and `agentPresets` dicts are the values edited by
+# Settings > Workspace modes; keep them empty here and assign from the GUI.
+# `rules` stays for config-as-code setups (longest path prefix wins, and a
+# workspace entry beats a rule for the same directory). Each dimension matches
+# separately: a rule may set only `preset`, only `agentPreset`, or both.
 - insert:
     - id: workspace-mode
       name: dsh-workspace-mode
       config:
         workspaces: {}
+        agentPresets: {}
         rules: []
         includeSubagents: false

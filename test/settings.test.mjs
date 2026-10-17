@@ -107,22 +107,40 @@ test('invalid workspaces values fail activation', () => {
   assert.throws(() => apply(host.ctx, { workspaces: { [base]: 42 } }), /must be a permission preset name/);
 });
 
-test('normalizeConfig merges the settings map before the yml rules', () => {
+test('normalizeConfig merges the settings maps before the yml rules', () => {
   const dir = join(base, 'client');
   const config = normalizeConfig({
     workspaces: { [dir]: 'danger-full-access' },
+    agentPresets: { [dir]: 'reverse' },
     rules: [{ path: dir, preset: 'workspace-write' }],
   });
   assert.deepEqual(config.rules, [
     { path: dir, preset: 'danger-full-access', label: '' },
+    { path: dir, agentPreset: 'reverse', label: '' },
     { path: dir, preset: 'workspace-write', label: '' },
   ]);
   assert.equal(config.caseSensitive, !CASE_INSENSITIVE);
 });
 
+test('invalid agentPresets values fail activation', () => {
+  const host = createHost();
+  assert.throws(() => apply(host.ctx, { agentPresets: 'nope' }), /config\.agentPresets must be an object/);
+  assert.throws(() => apply(host.ctx, { agentPresets: { [base]: '' } }), /must be an agent preset name/);
+  assert.throws(() => apply(host.ctx, { agentPresets: { [base]: 42 } }), /must be an agent preset name/);
+});
+
+test('an agent preset-only entry never touches the permission preset', () => {
+  const host = createHost();
+  apply(host.ctx, { agentPresets: { [join(base, 'client')]: 'reverse' } });
+  const session = createSession(join(base, 'client'));
+  emitCreated(host, session);
+  assert.equal(host.calls.length, 0);
+  assert.equal(session.permissions.preset, null);
+});
+
 test('the Config schema exposes every editable field as volatile', () => {
   assert.ok(Config, 'the host must export a schema so Settings can serve a form');
-  for (const field of ['workspaces', 'rules', 'includeSubagents', 'caseSensitive']) {
+  for (const field of ['workspaces', 'agentPresets', 'rules', 'includeSubagents', 'caseSensitive']) {
     assert.ok(Config.dict[field], 'missing config field ' + field);
     assert.equal(Config.dict[field].meta.volatile, true, field + ' must be volatile');
   }
@@ -131,10 +149,11 @@ test('the Config schema exposes every editable field as volatile', () => {
   // Resolving the schema yields live references (this is what the host passes
   // to apply()), so read every field through get() exactly like the plugin does.
   const resolved = Config({});
-  for (const field of ['workspaces', 'rules', 'includeSubagents', 'caseSensitive']) {
+  for (const field of ['workspaces', 'agentPresets', 'rules', 'includeSubagents', 'caseSensitive']) {
     assert.equal(typeof resolved[field].get, 'function', field + ' must resolve to a volatile reference');
   }
   assert.deepEqual(resolved.workspaces.get(), {});
+  assert.deepEqual(resolved.agentPresets.get(), {});
   assert.deepEqual(resolved.rules.get(), []);
   assert.equal(resolved.includeSubagents.get(), false);
   assert.equal(resolved.caseSensitive.get(), !CASE_INSENSITIVE);

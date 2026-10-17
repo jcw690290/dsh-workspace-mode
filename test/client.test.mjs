@@ -25,7 +25,12 @@ function stubReact() {
     useState(initial) {
       return [typeof initial === 'function' ? initial() : initial, () => {}];
     },
-    useEffect() {},
+    // Effects run inline: the stub renderer calls component functions directly,
+    // so "after mount" is "during this render" for the purpose of the test.
+    useEffect(fn) {
+      const dispose = fn();
+      if (typeof dispose === 'function') dispose();
+    },
   };
 }
 
@@ -60,7 +65,11 @@ test('the browser bundle registers under its package name and renders a settings
     status: 'ready',
     writable: true,
     revision: 1,
-    value: { workspaces: { 'D:/work/client': 'danger-full-access' }, includeSubagents: false },
+    value: {
+      workspaces: { 'D:/work/client': 'danger-full-access' },
+      agentPresets: { 'D:/work/client': 'reverse' },
+      includeSubagents: false,
+    },
   };
   const ctx = {
     effect(fn) {
@@ -68,7 +77,27 @@ test('the browser bundle registers under its package name and renders a settings
       return typeof dispose === 'function' ? dispose : () => {};
     },
     inject(services, callback) {
-      callback({ remote: { permissionPresets: { catalog: async () => ({ ok: true, value: { options: [{ value: 'read-only', name: '只读' }] } }) } } });
+      const names = Array.isArray(services) ? services : [services];
+      if (names.includes('remote.permissionPresets')) {
+        callback({ remote: { permissionPresets: { catalog: async () => ({ ok: true, value: { options: [{ value: 'read-only', name: '只读' }] } }) } } });
+      }
+      if (names.includes('remote.agentPresets')) {
+        callback({
+          remote: {
+            agentPresets: {
+              list: async () => ({
+                ok: true,
+                value: {
+                  presets: [
+                    { id: 'ptc', name: 'PTC', isDefault: true },
+                    { id: 'reverse', name: '反向' },
+                  ],
+                },
+              }),
+            },
+          },
+        });
+      }
       return () => {};
     },
     locale: {
@@ -114,9 +143,18 @@ test('the browser bundle registers under its package name and renders a settings
   assert.equal(descriptor.id, settingsNamespace);
   assert.equal(typeof descriptor.label, 'function');
 
+  // The stub renderer only reaches a component when it walks the element tree,
+  // so render once to mount (this starts the catalog loads), wait for them to
+  // resolve, then render the settled state.
+  textOf(component({ t: (key) => 'zh:' + key }));
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
   const rendered = component({ t: (key) => 'zh:' + key });
   const text = textOf(rendered);
   assert.ok(text.includes('D:/work/client'), 'the assigned workspace must be listed: ' + text);
   assert.ok(text.includes('danger-full-access'), 'the assigned preset must be selected: ' + text);
+  assert.ok(text.includes('反向 (reverse)'), 'the assigned mode must be selected: ' + text);
+  assert.ok(text.includes('PTC (ptc, zh:defaultMark)'), 'the default mode must be marked: ' + text);
+  assert.ok(!text.includes('zh:modesUnavailable'), 'agent presets resolved, so no warning: ' + text);
   assert.deepEqual(mutations, [], 'rendering must not write');
 });

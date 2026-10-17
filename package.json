@@ -1,7 +1,7 @@
 {
   "name": "dsh-workspace-mode",
-  "version": "0.2.1",
-  "description": "Per-workspace default permission preset for DSH: assign a permission preset to each workspace directory from Settings, and every new session opened there starts with it.",
+  "version": "0.3.0",
+  "description": "Per-workspace default permission preset and mode (agent preset) for DSH: assign a permission preset and/or an agent preset to each workspace directory from Settings, and every new session opened there starts with them.",
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
@@ -27,7 +27,9 @@
     "plugin",
     "permission",
     "workspace",
-    "settings"
+    "settings",
+    "agent-preset",
+    "mode"
   ],
   "scripts": {
     "test": "node test/match.test.mjs && node test/plugin.test.mjs && node test/settings.test.mjs && node test/client.test.mjs"

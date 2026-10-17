@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "按工作区初始模式",
-    "description": "按会话所处工作区自动套用不同的初始权限预设：在 设置 → 工作区模式 里为每个目录分配预设，也可继续用 cordis.patch.yml 的 rules 配置。"
+    "title": "按工作区初始权限与模式",
+    "description": "按会话所处工作区自动套用不同的初始权限预设和模式（Agent 预设）：在 设置 → 工作区模式 里为每个目录分配，也可继续用 cordis.patch.yml 的 rules 配置。"
   }
 }

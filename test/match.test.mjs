@@ -63,3 +63,19 @@ test('findRule is case-insensitive when configured', () => {
   const strict = compileRules([{ path: join(base, 'Client'), preset: 'workspace-write' }], { caseSensitive: true });
   assert.equal(findRule(join(base, 'client', 'src'), strict, { caseSensitive: true }), null);
 });
+test('findRule can look for the agent preset dimension', () => {
+  const compiled = compileRules([
+    { path: base, preset: 'workspace-write' },
+    { path: join(base, 'client'), agentPreset: 'reverse' },
+  ], { caseSensitive: false });
+  assert.equal(findRule(join(base, 'client', 'src'), compiled, { caseSensitive: false }, 'agentPreset').agentPreset, 'reverse');
+  // A rule without the requested dimension never matches.
+  assert.equal(findRule(join(base, 'other'), compiled, { caseSensitive: false }, 'agentPreset'), null);
+  assert.equal(findRule(join(base, 'client', 'src'), compiled, { caseSensitive: false }, 'preset').preset, 'workspace-write');
+});
+
+test('compileRules keeps every dimension a rule declares', () => {
+  const compiled = compileRules([{ path: base, preset: 'workspace-write', agentPreset: 'reverse' }], { caseSensitive: false });
+  assert.equal(compiled[0].preset, 'workspace-write');
+  assert.equal(compiled[0].agentPreset, 'reverse');
+});
