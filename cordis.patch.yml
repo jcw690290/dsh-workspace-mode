@@ -1,0 +1,15 @@
+# dsh-workspace-mode: one profile-level Host plugin row.
+#
+# Root-level insert (no `id`) appends this row after the existing profile
+# entries, so it activates after @deepseek-ai/dsh-permission-presets and can
+# pre-empt the initial permission pin for new sessions.
+#
+# Rules are empty by default: install, then configure them in the profile's
+# cordis.patch.yml (see README, "配置"). Editing this bundle patch is not
+# needed — a later profile patch overrides this row's config wholesale.
+- insert:
+    - id: workspace-mode
+      name: dsh-workspace-mode
+      config:
+        rules: []
+        includeSubagents: false

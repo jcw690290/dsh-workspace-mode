@@ -1,0 +1,43 @@
+{
+  "name": "dsh-workspace-mode",
+  "version": "0.1.0",
+  "description": "Per-workspace default permission preset for DSH: apply a permission preset automatically to every new session opened in a matching workspace.",
+  "license": "MIT",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "lib",
+    "locale",
+    "test",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "icon": "./icon.svg",
+  "keywords": [
+    "dsh",
+    "cordis",
+    "plugin",
+    "permission",
+    "workspace"
+  ],
+  "scripts": {
+    "test": "node test/match.test.mjs && node test/plugin.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": [
+        "./cordis.patch.yml"
+      ]
+    }
+  }
+}

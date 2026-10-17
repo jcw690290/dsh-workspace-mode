@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Workspace Mode",
+    "description": "Apply a different initial permission preset to new sessions based on the workspace they open."
+  }
+}
