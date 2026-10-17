@@ -1,12 +1,13 @@
 {
   "name": "dsh-workspace-mode",
-  "version": "0.1.0",
-  "description": "Per-workspace default permission preset for DSH: apply a permission preset automatically to every new session opened in a matching workspace.",
+  "version": "0.2.0",
+  "description": "Per-workspace default permission preset for DSH: assign a permission preset to each workspace directory from Settings, and every new session opened there starts with it.",
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
+    "./client": "./lib/client.js",
     "./package.json": "./package.json",
     "./locale/*.json": "./locale/*.json"
   },
@@ -25,19 +26,30 @@
     "cordis",
     "plugin",
     "permission",
-    "workspace"
+    "workspace",
+    "settings"
   ],
   "scripts": {
-    "test": "node test/match.test.mjs && node test/plugin.test.mjs"
+    "test": "node test/match.test.mjs && node test/plugin.test.mjs && node test/settings.test.mjs && node test/client.test.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.4"
   },
   "dsh": {
     "bundle": {
       "patch": [
         "./cordis.patch.yml"
       ]
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
     }
   }
 }

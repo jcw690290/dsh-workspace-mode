@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Workspace Mode",
-    "description": "Apply a different initial permission preset to new sessions based on the workspace they open."
+    "description": "Give each workspace its own initial permission preset: assign presets per directory in Settings > Workspace modes, or keep using the rules list in cordis.patch.yml."
   }
 }
