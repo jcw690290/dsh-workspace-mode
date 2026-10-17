@@ -1,6 +1,6 @@
 {
   "name": "dsh-workspace-mode",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Per-workspace default permission preset for DSH: assign a permission preset to each workspace directory from Settings, and every new session opened there starts with it.",
   "license": "MIT",
   "type": "module",

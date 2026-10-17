@@ -1,5 +1,9 @@
 # dsh-workspace-mode
 
+[![npm version](https://img.shields.io/npm/v/dsh-workspace-mode)](https://www.npmjs.com/package/dsh-workspace-mode)
+[![tests](https://github.com/jcw690290/dsh-workspace-mode/actions/workflows/test.yml/badge.svg)](https://github.com/jcw690290/dsh-workspace-mode/actions/workflows/test.yml)
+[![license](https://img.shields.io/npm/l/dsh-workspace-mode)](https://github.com/jcw690290/dsh-workspace-mode/blob/main/LICENSE)
+
 给 **每个工作区** 配置各自的 **初始权限模式**（permission preset）的 DSH 插件：图形界面在
 **设置 → 工作区模式** 里为每个目录分配预设，也支持在 profile 里用 YAML 声明规则。
 
@@ -48,7 +52,8 @@ DSH 的 settings 服务把「profile 中 id 为 `workspace-mode` 的条目」的
 ### 方式 A：Web 插件页
 
 1. 打开 DSH 侧边栏「插件」页。
-2. 安装 bundle，目标填包名 `dsh-workspace-mode`（已发布到 npm），或本仓库的绝对路径、git 地址。
+2. 安装 bundle，目标填包名 `dsh-workspace-mode`（已发布到 npm：https://www.npmjs.com/package/dsh-workspace-mode ），
+   或本仓库的绝对路径、git 地址。
 3. 重启 DSH。
 
 ### 方式 B：plugin_manager 工具
