@@ -1,6 +1,3 @@
 node_modules/
 *.log
 .DS_Store
-
-# Pushing GitHub Actions workflows requires a token with the `workflow` scope.
-.github/workflows/
